@@ -31,6 +31,7 @@ get_tags(resource) = labels {
 
 deny[reason] {
     # resource := tfplan.resource_changes[_]
+    resource := input.resource_changes[_]
     resource.type == "aws_iam_user"
     action := resource.change.actions[count(resource.change.actions) - 1]
     array_contains(["create", "update"], action)
