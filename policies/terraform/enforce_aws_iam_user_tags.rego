@@ -30,7 +30,8 @@ get_tags(resource) = labels {
 }
 
 deny[reason] {
-    resource := tfplan.resource_changes[_]
+    # resource := tfplan.resource_changes[_]
+    resource.type == "aws_iam_user"
     action := resource.change.actions[count(resource.change.actions) - 1]
     array_contains(["create", "update"], action)
     tags := get_tags(resource)
@@ -39,8 +40,5 @@ deny[reason] {
     required_tag := required_tags[_]
     not array_contains(existing_tags, required_tag)
 
-    reason := sprintf(
-        "%s: missing required tag %q",
-        [resource.address, required_tag]
-    )
+    reason := sprintf("%s: missing required tag %q", [resource.address, required_tag])
 }
